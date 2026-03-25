@@ -23,9 +23,14 @@ const userSchema = new mongoose.Schema(
             required: true
         },
         role : {
-            type: Number,
-            default: 0
-        }
+            type: String,
+            enum: ["ADMIN", "PLAYER"],
+            default: "PLAYER"
+        },
+        history: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'FightHistory'
+        }]
     },{timestamps: true}
 );
 
