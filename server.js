@@ -7,7 +7,7 @@ const connectDb = require('./config/db');
 
 //all routes
 const userRoutes = require('./routes/authRoutes');
-
+const characterRoutes = require('./routes/characterRoutes');
 
 //get the env variable
 dotenv.config();
@@ -25,7 +25,7 @@ app.use(express.json());
 //definition des route
 
 //book api
-app.use('/api/books', require('./routes/bookRoutes'));
+app.use('/api/character', characterRoutes);
 //user api
 app.use('/api/user', userRoutes);
 
