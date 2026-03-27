@@ -8,6 +8,7 @@ const connectDb = require('./config/db');
 //all routes
 const userRoutes = require('./routes/authRoutes');
 const characterRoutes = require('./routes/characterRoutes');
+const historyRoutes = require('./routes/historyRoutes');
 
 //get the env variable
 dotenv.config();
@@ -28,6 +29,8 @@ app.use(express.json());
 app.use('/api/character', characterRoutes);
 //user api
 app.use('/api/user', userRoutes);
+//history api
+app.use('/api/history', historyRoutes);
 
 //test route
 app.get('/', (req, res) =>{
