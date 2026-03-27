@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDb = require('./config/db');
 
+//all routes
+const userRoutes = require('./routes/authRoutes');
+
 
 //get the env variable
 dotenv.config();
@@ -24,7 +27,12 @@ app.use(express.json());
 //book api
 app.use('/api/books', require('./routes/bookRoutes'));
 //user api
-app.use('/api/user', require('./routes/userRoutes'));
+app.use('/api/user', userRoutes);
+
+//test route
+app.get('/', (req, res) =>{
+    res.send("API Game Fight en ligne ...");
+});
 
 //if route note found
 app.use((req, res) =>{
