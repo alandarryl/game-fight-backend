@@ -34,14 +34,14 @@ const createCharacter = async (req, res) => {
 
 const deleteCharacter = async (req, res) => {
     try {
-        const character = await Character.findById(req.params.id); // Ajout de req.
+        const character = await Character.findById(req.params.id); 
 
         if (!character) {
             return res.status(404).json({ message: "Personnage non trouvé" });
         }
 
         await Character.findByIdAndDelete(req.params.id);
-        res.status(200).json({ message: "Suppression réussie" }); // 200 est plus standard pour delete
+        res.status(200).json({ message: "Suppression réussie" }); 
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la suppression", error: error.message });
     }
@@ -74,11 +74,28 @@ const toggleCharacterStatus = async (req, res) =>{
 }
 
 
+const getCharacterById = async (req, res) => {
+    try {
+        const character = await Character.findById(req.params.id);
+
+        if (!character) {
+            return res.status(404).json({ message: "Guerrier introuvable dans le Coliseum" });
+        }
+
+        res.json(character);
+    } catch (error) {
+        // Si l'ID est mal formé (pas assez de caractères par ex), MongoDB jette une erreur de Cast
+        res.status(500).json({ message: "Erreur lors de la récupération du personnage", error: error.message });
+    }
+};
+
+
 module.exports = {
     createCharacter,
     updateCharacter,
     deleteCharacter,
     getCharacters,
-    toggleCharacterStatus
+    toggleCharacterStatus,
+    getCharacterById
 }
 
