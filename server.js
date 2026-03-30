@@ -20,7 +20,12 @@ connectDb();
 const app = express();
 
 //middlewares
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // L'adresse précise de ton Next.js
+    credentials: true,               // OBLIGATOIRE pour les cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 app.use(cookieParser());
