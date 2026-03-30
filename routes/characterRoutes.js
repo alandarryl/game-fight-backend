@@ -14,7 +14,7 @@ const {protect, isAdmin} = require('../middleware/authMiddleware');
 
 //access by all user 
 
-router.get('/', protect, getCharacters);
+router.get('/All', protect, getCharacters);
 
 //only by admin
 router.post('/create', protect, isAdmin, createCharacter);

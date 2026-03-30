@@ -3,6 +3,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const connectDb = require('./config/db');
 
 //all routes
@@ -21,6 +22,8 @@ const app = express();
 //middlewares
 app.use(cors());
 app.use(express.json());
+
+app.use(cookieParser());
 
 
 //definition des route

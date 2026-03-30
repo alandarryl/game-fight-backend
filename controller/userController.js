@@ -54,12 +54,21 @@ const login = async (req, res) =>{
 
         //check if password match
         if(user && (await user.matchPassword(password))){
+            const token = generateToken(user._id, user.role);
+
+            //add cookie
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSize: 'strict',
+                maxAge: 24 * 60 * 60 * 1000
+            });
+
             res.json({
                 _id: user._id,
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id, user.role),
             });
         } else{
             res.status(401).json({message: "Email ou mot de passe incorrect" });
