@@ -1,45 +1,58 @@
-
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-//Fonction pour générer le token JWT
-const generateToken = (id, role) =>{
-    return jwt.sign({id, role}, process.env.JWT_SECRET, {
+// Fonction pour générer le token JWT
+const generateToken = (id, role) => {
+    return jwt.sign({ id, role }, process.env.JWT_SECRET, {
         expiresIn: '24h'
     });
 };
 
-//enregistrer un nouvel user
-const register = async (req, res) =>{
+// Enregistrer un nouvel user
+const register = async (req, res) => {
     try {
-        const {username, email, password, image_profil } = req.body;
+        const { username, email, password, image_profil } = req.body;
 
-        //check if user exist
-        const userExist = await User.findOne({ $or: [{email}, {username} ] });
-        if(userExist){
-            return res.status(400).json({message: "Le l'email et le pseudo ne sont pas disponible" });
+        // 1. Check si l'user existe
+        const userExist = await User.findOne({ $or: [{ email }, { username }] });
+        if (userExist) {
+            return res.status(400).json({ message: "L'email ou le pseudo est déjà utilisé" });
         }
 
-        //create a user
+        // 2. Créer l'user
         const user = await User.create({
             username,
             email,
             password,
-            image_profil: image_profil || default_user.png
-        })
+            // CORRECTION ICI : Ajout des guillemets
+            image_profil: image_profil || "default_user.png" 
+        });
 
-        if(user){
+        if (user) {
+            const token = generateToken(user._id, user.role);
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict', 
+                maxAge: 24 * 60 * 60 * 1000
+            });
+
             res.status(201).json({
                 _id: user._id,
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                token: generateToken(user._id, user.role),
+                token: token 
             });
         }
-
     } catch (error) {
-        res.status(500).json({message: "erreur serveur lors de l'inscription", error: error.message });
+        // En cas d'erreur, on log l'erreur exacte dans la console du serveur
+        console.error("Erreur Inscription:", error);
+        res.status(500).json({ 
+            message: "Erreur serveur lors de l'inscription", 
+            error: error.message 
+        });
     }
 }
 

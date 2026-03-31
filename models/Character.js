@@ -29,7 +29,7 @@ const characterSchema = new mongoose.Schema({
     avatar: {
         type: String
     },
-    stength: {
+    strength: {
         type: Number,
         dafault: 100
     },
